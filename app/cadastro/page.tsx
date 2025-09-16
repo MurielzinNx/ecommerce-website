@@ -1,85 +1,81 @@
-<<<<<<< HEAD
-"use client"
+'use client';
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react"
-import { useAuth } from "@/lib/auth"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { apiFetch, saveToken } from "../../components/Api";
 
 export default function CadastroPage() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [acceptTerms, setAcceptTerms] = useState(false)
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { register } = useAuth()
-  const router = useRouter()
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
-    // Validation
+    // validações
     if (!name || !email || !password || !confirmPassword) {
-      setError("Por favor, preencha todos os campos")
-      setIsLoading(false)
-      return
+      setError("Por favor, preencha todos os campos");
+      setIsLoading(false);
+      return;
     }
-
     if (!email.includes("@")) {
-      setError("Por favor, insira um email válido")
-      setIsLoading(false)
-      return
+      setError("Por favor, insira um email válido");
+      setIsLoading(false);
+      return;
     }
-
     if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres")
-      setIsLoading(false)
-      return
+      setError("A senha deve ter pelo menos 6 caracteres");
+      setIsLoading(false);
+      return;
     }
-
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem")
-      setIsLoading(false)
-      return
+      setError("As senhas não coincidem");
+      setIsLoading(false);
+      return;
     }
-
     if (!acceptTerms) {
-      setError("Você deve aceitar os termos de uso")
-      setIsLoading(false)
-      return
+      setError("Você deve aceitar os termos de uso");
+      setIsLoading(false);
+      return;
     }
 
     try {
-      const result = await register(name, email, password)
-      if (result.success) {
-        router.push("/")
+      const data = await apiFetch("/api/auth/register", {
+        method: "POST",
+        body: { name, email, password },
+      });
+      if (data.token) {
+        saveToken(data.token);
+        router.push("/");
       } else {
-        setError(result.error || "Erro ao criar conta")
+        setError("Erro ao criar conta");
       }
-    } catch (err) {
-      setError("Erro interno. Tente novamente.")
+    } catch (err: any) {
+      setError(err.message || "Erro interno. Tente novamente.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -165,11 +161,7 @@ export default function CadastroPage() {
                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
                     </Button>
                   </div>
                 </div>
@@ -194,11 +186,7 @@ export default function CadastroPage() {
                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
                     </Button>
                   </div>
                 </div>
@@ -237,42 +225,5 @@ export default function CadastroPage() {
 
       <Footer />
     </div>
-  )
-=======
-
-'use client';
-import { useState } from 'react';
-import { apiFetch, saveToken } from '../../components/Api';
-
-export default function RegisterPage(){
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  async function onSubmit(e){
-    e.preventDefault();
-    try{
-      const data = await apiFetch('/api/auth/register', { method: 'POST', body: { name, email, password } });
-      saveToken(data.token);
-      window.location.href = '/';
-    }catch(err){
-      setError(err.message);
-    }
-  }
-  return (
-    <div style={{padding:20}}>
-      <h1>Cadastro</h1>
-      <form onSubmit={onSubmit}>
-        <div><label>Nome</label><br/>
-          <input value={name} onChange={e=>setName(e.target.value)} /></div>
-        <div><label>Email</label><br/>
-          <input value={email} onChange={e=>setEmail(e.target.value)} /></div>
-        <div><label>Senha</label><br/>
-          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} /></div>
-        <button type="submit">Cadastrar</button>
-      </form>
-      {error && <div style={{color:'red'}}>{error}</div>}
-    </div>
   );
->>>>>>> f428f4a3df814e97c42e06778a3b74e67cbf99df
 }
