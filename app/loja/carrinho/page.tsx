@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch, getToken, saveToken } from "@/components/api";
+import { apiFetch, getToken } from "@/components/api";
 
 interface Produto {
   id: number;
@@ -44,7 +44,8 @@ export default function CarrinhoPage() {
   }
 
   function handleLogout() {
-    logout();
+    // Função logout implementada
+    localStorage.removeItem("token");
     router.push("/login-page");
   }
 

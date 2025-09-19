@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { apiFetch, saveToken } from "../../components/Api";
+import { apiFetch, saveToken } from "@/components/Api"; // Ajuste para o case correto do arquivo
 
 export default function CadastroPage() {
   const [name, setName] = useState("");
@@ -192,7 +192,11 @@ export default function CadastroPage() {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="terms" checked={acceptTerms} onCheckedChange={setAcceptTerms} />
+                  <Checkbox
+                    id="terms"
+                    checked={acceptTerms}
+                    onCheckedChange={(checked) => setAcceptTerms(!!checked)}
+                  />
                   <Label htmlFor="terms" className="text-sm">
                     Aceito os{" "}
                     <Link href="/termos" className="text-primary hover:underline">

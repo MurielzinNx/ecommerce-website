@@ -1,0 +1,5 @@
+// app/loja/metadata.ts
+export const metadata = {
+  title: "Loja - Loja Moderna",
+  description: "Explore nossa coleção completa de produtos com os melhores preços e qualidade.",
+};
